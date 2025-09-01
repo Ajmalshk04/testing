@@ -128,21 +128,21 @@ export default function UserManagementPage() {
     {
       accessorKey: 'name',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title=\"Name\" />
+        <DataTableColumnHeader column={column} title="Name" />
       ),
       cell: ({ row }) => {
         const user = row.original;
         return (
-          <div className=\"flex items-center space-x-2\">
-            <Avatar className=\"h-8 w-8\">
+          <div className="flex items-center space-x-2">
+            <Avatar className="h-8 w-8">
               <AvatarImage src={user.avatar} />
               <AvatarFallback>
                 {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div>
-              <div className=\"font-medium\">{user.name}</div>
-              <div className=\"text-sm text-muted-foreground\">{user.email}</div>
+              <div className="font-medium">{user.name}</div>
+              <div className="text-sm text-muted-foreground">{user.email}</div>
             </div>
           </div>
         );
@@ -151,13 +151,13 @@ export default function UserManagementPage() {
     {
       accessorKey: 'role',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title=\"Role\" />
+        <DataTableColumnHeader column={column} title="Role" />
       ),
       cell: ({ row }) => {
         const role = row.getValue('role') as string;
         return (
           <Badge variant={role === 'admin' ? 'default' : 'secondary'}>
-            <Shield className=\"mr-1 h-3 w-3\" />
+            <Shield className="mr-1 h-3 w-3" />
             {role.toUpperCase()}
           </Badge>
         );
@@ -166,13 +166,13 @@ export default function UserManagementPage() {
     {
       accessorKey: 'isActive',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title=\"Status\" />
+        <DataTableColumnHeader column={column} title="Status" />
       ),
       cell: ({ row }) => {
         const isActive = row.getValue('isActive') as boolean;
         return (
           <Badge variant={isActive ? 'default' : 'destructive'}>
-            {isActive ? <UserCheck className=\"mr-1 h-3 w-3\" /> : <UserX className=\"mr-1 h-3 w-3\" />}
+            {isActive ? <UserCheck className="mr-1 h-3 w-3" /> : <UserX className="mr-1 h-3 w-3" />}
             {isActive ? 'Active' : 'Inactive'}
           </Badge>
         );
@@ -181,13 +181,13 @@ export default function UserManagementPage() {
     {
       accessorKey: 'isEmailVerified',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title=\"Email\" />
+        <DataTableColumnHeader column={column} title="Email" />
       ),
       cell: ({ row }) => {
         const isVerified = row.getValue('isEmailVerified') as boolean;
         return (
           <Badge variant={isVerified ? 'default' : 'secondary'}>
-            <Mail className=\"mr-1 h-3 w-3\" />
+            <Mail className="mr-1 h-3 w-3" />
             {isVerified ? 'Verified' : 'Pending'}
           </Badge>
         );
@@ -196,7 +196,7 @@ export default function UserManagementPage() {
     {
       accessorKey: 'createdAt',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title=\"Created\" />
+        <DataTableColumnHeader column={column} title="Created" />
       ),
       cell: ({ row }) => {
         return new Date(row.getValue('createdAt')).toLocaleDateString();
@@ -209,17 +209,17 @@ export default function UserManagementPage() {
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant=\"ghost\" className=\"h-8 w-8 p-0\">
-                <MoreHorizontal className=\"h-4 w-4\" />
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align=\"end\">
+            <DropdownMenuContent align="end">
               <DropdownMenuItem>
-                <Edit className=\"mr-2 h-4 w-4\" />
+                <Edit className="mr-2 h-4 w-4" />
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Trash2 className=\"mr-2 h-4 w-4\" />
+                <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -285,11 +285,11 @@ export default function UserManagementPage() {
   ];
 
   return (
-    <div className=\"container mx-auto p-6 space-y-6\">
-      <div className=\"flex items-center justify-between\">
+    <div className="container mx-auto p-6 space-y-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className=\"text-3xl font-bold\">User Management</h1>
-          <p className=\"text-muted-foreground\">
+          <h1 className="text-3xl font-bold">User Management</h1>
+          <p className="text-muted-foreground">
             Manage users with advanced filtering and bulk operations
           </p>
         </div>

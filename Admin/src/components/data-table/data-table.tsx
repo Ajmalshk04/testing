@@ -168,35 +168,40 @@ export function DataTable<TData>({
   return (
     <div className={cn("space-y-4", className)}>
       {toolbarConfig && (
-        <DataTableToolbar
-          table={table}
-          config={toolbarConfig}
-          globalFilter={globalFilter}
-          setGlobalFilter={setGlobalFilter}
-        />
+        <div className="bg-card/30 backdrop-blur-sm rounded-lg border border-border/40 p-4">
+          <DataTableToolbar
+            table={table}
+            config={toolbarConfig}
+            globalFilter={globalFilter}
+            setGlobalFilter={setGlobalFilter}
+          />
+        </div>
       )}
 
       {hasSelection && toolbarConfig?.actions && (
-        <DataTableActionBar
-          selectedCount={selectedRowCount}
-          actions={toolbarConfig.actions}
-          selectedRows={table.getFilteredSelectedRowModel().rows.map(
-            (row) => row.original
-          )}
-          onClearSelection={() => setRowSelection({})}
-        />
+        <div className="bg-primary/5 backdrop-blur-sm rounded-lg border border-primary/20 p-3">
+          <DataTableActionBar
+            selectedCount={selectedRowCount}
+            actions={toolbarConfig.actions}
+            selectedRows={table.getFilteredSelectedRowModel().rows.map(
+              (row) => row.original
+            )}
+            onClearSelection={() => setRowSelection({})}
+          />
+        </div>
       )}
 
-      <div className="rounded-md border">
+      <div className="relative overflow-hidden rounded-lg border border-border/40 bg-card/50 backdrop-blur-sm shadow-sm">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="hover:bg-transparent border-b border-border/50">
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
                     className={cn(
-                      header.column.getCanSort() && "cursor-pointer select-none",
+                      "bg-muted/20 dark:bg-muted/10",
+                      header.column.getCanSort() && "cursor-pointer select-none hover:bg-muted/30 transition-colors",
                       (header.column.columnDef.meta as any)?.headerClassName
                     )}
                     style={{
@@ -216,12 +221,16 @@ export function DataTable<TData>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map((row, index) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   className={cn(
+                    "group transition-all duration-200",
                     row.getCanSelect() && "cursor-pointer",
+                    row.getIsSelected() && "bg-muted/60 dark:bg-muted/40 border-primary/30",
+                    index % 2 === 0 ? "bg-background/50" : "bg-muted/20",
+                    "hover:bg-muted/50 dark:hover:bg-muted/30",
                     row.original &&
                       typeof row.original === "object" &&
                       "meta" in row.original &&
@@ -232,6 +241,7 @@ export function DataTable<TData>({
                     <TableCell
                       key={cell.id}
                       className={cn(
+                        "transition-colors duration-200",
                         (cell.column.columnDef.meta as any)?.cellClassName
                       )}
                     >
@@ -241,12 +251,16 @@ export function DataTable<TData>({
                 </TableRow>
               ))
             ) : (
-              <TableRow>
+              <TableRow className="hover:bg-transparent">
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-32 text-center text-muted-foreground"
                 >
-                  No results.
+                  <div className="flex flex-col items-center justify-center space-y-2">
+                    <div className="text-4xl opacity-20">📋</div>
+                    <div className="text-sm">No results found</div>
+                    <div className="text-xs text-muted-foreground/60">Try adjusting your search or filters</div>
+                  </div>
                 </TableCell>
               </TableRow>
             )}
@@ -255,10 +269,12 @@ export function DataTable<TData>({
       </div>
 
       {enablePagination && (
-        <DataTablePagination
-          table={table}
-          pageSizeOptions={pageSizeOptions}
-        />
+        <div className="bg-card/30 backdrop-blur-sm rounded-lg border border-border/40 p-3">
+          <DataTablePagination
+            table={table}
+            pageSizeOptions={pageSizeOptions}
+          />
+        </div>
       )}
     </div>
   );

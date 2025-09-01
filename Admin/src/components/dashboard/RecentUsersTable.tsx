@@ -1,6 +1,6 @@
 import React from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal, Eye, Edit, Trash2, UserCheck, UserX, Mail, Calendar } from 'lucide-react';
+import { MoreHorizontal, Eye, Edit, Trash2, UserCheck, UserX, Mail, Calendar, Users } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { DataTable } from '@/components/data-table/data-table';
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header';
+import { cn } from '@/lib/utils';
 import type { User } from '@/services/userService';
 import { userService } from '@/services/userService';
 import type {
@@ -112,16 +113,16 @@ export function RecentUsersTable({ showFullFeatures = false }: RecentUsersTableP
       cell: ({ row }: any) => {
         const user = row.original;
         return (
-          <div className="flex items-center space-x-3">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={user.avatar} />
-              <AvatarFallback>
+          <div className="flex items-center space-x-3 py-1">
+            <Avatar className="h-9 w-9 ring-2 ring-primary/10 shadow-sm">
+              <AvatarImage src={user.avatar} className="object-cover" />
+              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-indigo-500 text-white text-sm font-semibold">
                 {user.name.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div>
-              <div className="font-medium">{user.name}</div>
-              <div className="text-sm text-muted-foreground">{user.email}</div>
+            <div className="min-w-0 flex-1">
+              <div className="font-semibold text-foreground truncate">{user.name}</div>
+              <div className="text-sm text-muted-foreground truncate">{user.email}</div>
             </div>
           </div>
         );
@@ -135,7 +136,13 @@ export function RecentUsersTable({ showFullFeatures = false }: RecentUsersTableP
       cell: ({ row }: any) => {
         const role = row.getValue('role') as string;
         return (
-          <Badge variant={role === 'admin' ? 'default' : 'secondary'}>
+          <Badge 
+            variant={role === 'admin' ? 'default' : 'secondary'}
+            className={cn(
+              "font-medium",
+              role === 'admin' && "bg-blue-500 text-white dark:bg-blue-600"
+            )}
+          >
             {role.toUpperCase()}
           </Badge>
         );
@@ -149,8 +156,14 @@ export function RecentUsersTable({ showFullFeatures = false }: RecentUsersTableP
       cell: ({ row }: any) => {
         const isActive = row.getValue('isActive') as boolean;
         return (
-          <Badge variant={isActive ? 'default' : 'destructive'}>
-            {isActive ? <UserCheck className="mr-1 h-3 w-3" /> : <UserX className="mr-1 h-3 w-3" />}
+          <Badge 
+            variant={isActive ? 'default' : 'destructive'}
+            className={cn(
+              "font-medium flex items-center gap-1",
+              isActive && "bg-green-500 text-white dark:bg-green-600"
+            )}
+          >
+            {isActive ? <UserCheck className="h-3 w-3" /> : <UserX className="h-3 w-3" />}
             {isActive ? 'Active' : 'Inactive'}
           </Badge>
         );
@@ -164,8 +177,14 @@ export function RecentUsersTable({ showFullFeatures = false }: RecentUsersTableP
       cell: ({ row }: any) => {
         const isVerified = row.getValue('isEmailVerified') as boolean;
         return (
-          <Badge variant={isVerified ? 'default' : 'secondary'}>
-            <Mail className="mr-1 h-3 w-3" />
+          <Badge 
+            variant={isVerified ? 'default' : 'secondary'}
+            className={cn(
+              "font-medium flex items-center gap-1",
+              isVerified && "bg-emerald-500 text-white dark:bg-emerald-600"
+            )}
+          >
+            <Mail className="h-3 w-3" />
             {isVerified ? 'Verified' : 'Pending'}
           </Badge>
         );
@@ -179,9 +198,9 @@ export function RecentUsersTable({ showFullFeatures = false }: RecentUsersTableP
       cell: ({ row }: any) => {
         const date = new Date(row.getValue('createdAt'));
         return (
-          <div className="flex items-center">
-            <Calendar className="mr-2 h-3 w-3 text-muted-foreground" />
-            <span className="text-sm">{date.toLocaleDateString()}</span>
+          <div className="flex items-center gap-2 text-sm">
+            <Calendar className="h-3 w-3 text-muted-foreground" />
+            <span className="font-medium">{date.toLocaleDateString()}</span>
           </div>
         );
       },
@@ -193,20 +212,21 @@ export function RecentUsersTable({ showFullFeatures = false }: RecentUsersTableP
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-muted transition-colors">
                 <MoreHorizontal className="h-4 w-4" />
+                <span className="sr-only">Open menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => handleQuickAction('view', user)}>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem onClick={() => handleQuickAction('view', user)} className="cursor-pointer">
                 <Eye className="mr-2 h-4 w-4" />
                 View Details
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleQuickAction('edit', user)}>
+              <DropdownMenuItem onClick={() => handleQuickAction('edit', user)} className="cursor-pointer">
                 <Edit className="mr-2 h-4 w-4" />
                 Edit User
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleQuickAction('toggle-status', user)}>
+              <DropdownMenuItem onClick={() => handleQuickAction('toggle-status', user)} className="cursor-pointer">
                 {user.isActive ? (
                   <UserX className="mr-2 h-4 w-4" />
                 ) : (
@@ -216,7 +236,7 @@ export function RecentUsersTable({ showFullFeatures = false }: RecentUsersTableP
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handleQuickAction('delete', user)}
-                className="text-destructive"
+                className="cursor-pointer text-destructive focus:text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete
@@ -270,27 +290,34 @@ export function RecentUsersTable({ showFullFeatures = false }: RecentUsersTableP
   };
 
   return (
-    <div className="space-y-4">
-      <DataTable
-        columns={columns}
-        data={users}
-        loading={loading}
-        toolbarConfig={showFullFeatures ? toolbarConfig : undefined}
-        enableRowSelection={showFullFeatures}
-        enableMultiSelect={showFullFeatures}
-        enableSorting={true}
-        enableFiltering={showFullFeatures}
-        enablePagination={showFullFeatures}
-        pageSize={pagination.limit}
-        pageSizeOptions={showFullFeatures ? [10, 20, 50] : undefined}
-      />
+    <div className="space-y-6">
+      <div className="bg-card/50 backdrop-blur-sm border border-border/40 rounded-lg shadow-sm">
+        <DataTable
+          columns={columns}
+          data={users}
+          loading={loading}
+          toolbarConfig={showFullFeatures ? toolbarConfig : undefined}
+          enableRowSelection={showFullFeatures}
+          enableMultiSelect={showFullFeatures}
+          enableSorting={true}
+          enableFiltering={showFullFeatures}
+          enablePagination={showFullFeatures}
+          pageSize={pagination.limit}
+          pageSizeOptions={showFullFeatures ? [10, 20, 50] : undefined}
+        />
+      </div>
 
       {!showFullFeatures && (
-        <div className="text-center">
-          <p className="text-sm text-muted-foreground mb-3">
-            This is a preview showing {users.length} recent users. 
-          </p>
-          <Button variant="outline" size="sm">
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border border-border/40 rounded-lg p-6 text-center">
+          <div className="flex items-center justify-center space-x-2 mb-3">
+            <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse"></div>
+            <p className="text-sm text-muted-foreground font-medium">
+              Preview showing {users.length} recent users
+            </p>
+            <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse"></div>
+          </div>
+          <Button variant="outline" size="sm" className="shadow-sm hover:shadow-md transition-shadow">
+            <Users className="mr-2 h-4 w-4" />
             View Full User Management →
           </Button>
         </div>
